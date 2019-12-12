@@ -1,20 +1,16 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApplication1.Models;
 using MySql.Data.MySqlClient;
 
-namespace koolerapp
+namespace KoolApplicationMain.Models
 {
-	public class Search
-	{
-
-
-
+    public class Search
+    {
 		public string ConnectionString { get; set; }
 
-		
+
 
 		public MySqlConnection GetConnection()
 		{

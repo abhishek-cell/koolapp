@@ -1,6 +1,6 @@
 using System;
 
-namespace WebApplication1.Models
+namespace KoolApplicationMain.Models
 {
     public class ErrorViewModel
     {
