@@ -6,7 +6,7 @@ using MySql.Data.MySqlClient;
 
 namespace KoolApplicationMain.Models
 {
-    public class Search:IProductDescription
+    public class Search:IProductInformation
     {
 		public string ConnectionString { get; set; }
 
@@ -19,7 +19,7 @@ namespace KoolApplicationMain.Models
 			return new MySqlConnection(ConnectionString);
 		}
 
-		public List<Product> GetProductsDetail()
+		public List<Product> GetProductsInformation()
 		{
 			List<Product> plist = new List<Product>();
 			using (MySqlConnection conn = GetConnection())
