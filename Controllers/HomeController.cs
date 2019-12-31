@@ -50,12 +50,31 @@ namespace KoolApplicationMain.Controllers
 
             //return View();
         }
-        public IActionResult ProductDetail()
+        public IActionResult ProductDetail(int p)
         {
+            Search search = new Search();
+            var model = new List<Product>();
+            DataTable dt = new DataTable();
+            MySqlDataAdapter mda;
+            using (MySqlConnection conn = search.GetConnection())
+            {
+                conn.Open();
+                string str = "select XXIBM_PRODUCT_SKU.Item_number,XXIBM_PRODUCT_SKU.description,XXIBM_PRODUCT_PRICING.List_price,XXIBM_PRODUCT_PRICING.In_stock from XXIBM_PRODUCT_SKU JOIN XXIBM_PRODUCT_PRICING ON XXIBM_PRODUCT_SKU.Item_number=XXIBM_PRODUCT_PRICING.Item_number where XXIBM_PRODUCT_SKU.Item_number=" + p + " ";
+                mda = new MySqlDataAdapter(str, search.GetConnection());
+                mda.Fill(dt);
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    model.Add(new Product()
+                    {
+                        ItemNumber = Convert.ToInt32(dt.Rows[i]["Item_number"]),
+                        Description = dt.Rows[i]["description"].ToString(),
+                        Price = Convert.ToDouble(dt.Rows[i]["List_price"]),
+                        Brand = dt.Rows[i]["Brand"].ToString()
 
-            var list = _productInformation.GetProductsInformation();
-            ViewBag.name = "All products";
-            return View(list);
+                    });
+                }
+            }
+            return View(model);
         }
         [HttpPost]
         public IActionResult Search(string search)
@@ -74,23 +93,6 @@ namespace KoolApplicationMain.Controllers
             return View("EachProductDetails", result);
 
         }
-
-        public IActionResult Brands(string brand)
-        {
-
-            var result = _productInformation.GetProductsInformation();
-
-            result = result.Where(l => string.Compare(l.Brand, brand, true) == 0).ToList();
-            if (result.Count == 0)
-            {
-                return View("NoResults");
-            }
-            ViewBag.name = brand;
-            return View("ProductDetail", result);
-
-        }
-
-
 
         public IActionResult EachProductDetails()
         {
