@@ -9,6 +9,9 @@
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
         <link href="~/css/menu.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" media="all" />
@@ -21,50 +24,36 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
         <link rel="stylesheet" href="~/css/menu.css" asp-append-version="true" />
-
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">KoolApplicationMain</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="ProductDetail">ProductList</a></li>
-                    <li> <a href="#menu-toggle" class="btn btn-secondary" id="menu-toggle">Product Menu</a></li>
+    <div class="topnav">
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand" style="font-family:'Comic Sans MS';font-size:large">Red Hocks.</a>
+        <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+        <a asp-area="" asp-controller="Home" asp-action="EachProductDetails">ProductList</a>
+        <a asp-area="" asp-controller="Home" asp-action="ProductDetail">Category</a>
+        <div class="search-container">
+            <form id="labnol" asp-area="" method="post" asp-controller="Home" asp-action="Search">
+                <div class="search box">
+                    <i class="fa fa-microphone" onclick="startDictation()"></i>
+                    <input class="input-sm" type="text" name="search" id="transcript" placeholder="Search for products..." required />
+                    <button type="submit"><i class="fa fa-search"></i></button>
 
-                </ul>
-                @*<form class="form-inline my-2 my-lg-0">*@
-
-                    <form id="labnol" asp-area="" method="post" asp-controller="Home" asp-action="Search">
-                        <div class="search box">
-                            <i class="fa fa-microphone" onclick="startDictation()"></i>
-                            <input class="input-sm" type="text" name="search" id="transcript" placeholder="Search for products..." required />
-                        </div>
-                        <div class="box"> <input class="btn-sm" type="submit" value="Search" /></div>
-                    </form>
-                    @*<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>*@
-            </div>
+                </div>
+            </form>
         </div>
-    </nav>
+    </div>
+    
+
+
+    @*<nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </nav>*@
 
     
-    @*<nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </nav>*@
     <div id="wrapper">
 
         <!-- Sidebar -->
@@ -104,6 +93,7 @@
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src='https://kit.fontawesome.com/a076d05399.js'></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
         <script src="~/js/menu.js" asp-append-version="true"></script>
     </environment>
@@ -123,7 +113,18 @@
         <script src="~/js/site.min.js" asp-append-version="true"></script>
         <script src="~/js/menu.js" asp-append-version="true"></script>
     </environment>
-    
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $("#transcript").autocomplete({
+                source: 'api/rest/search'
+
+            });
+        });
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
