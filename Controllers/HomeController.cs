@@ -8,14 +8,15 @@ using KoolApplicationMain.Models;
 using MySql.Data.MySqlClient;
 using System.Data;
 
+
 namespace KoolApplicationMain.Controllers
 {
     public class HomeController : Controller
     {
-        private IProductDescription _productDescription;
-        public HomeController(IProductDescription productDescription)
+        private IProductInformation _productInformation;
+        public HomeController(IProductInformation ProductInformation)
         {
-            _productDescription = productDescription;
+            _productInformation = ProductInformation;
         }
         public IActionResult Index()
         {
@@ -26,61 +27,42 @@ namespace KoolApplicationMain.Controllers
             using (MySqlConnection conn = search.GetConnection())
             {
 
-                conn.Open();
-                string str = "select XXIBM_PRODUCT_SKU.Item_number,XXIBM_PRODUCT_SKU.description,XXIBM_PRODUCT_PRICING.List_price,XXIBM_PRODUCT_PRICING.In_stock from XXIBM_PRODUCT_SKU JOIN XXIBM_PRODUCT_PRICING ON XXIBM_PRODUCT_SKU.Item_number=XXIBM_PRODUCT_PRICING.Item_number ";
+                //conn.Open();
+                //string str = "select XXIBM_PRODUCT_SKU.Item_number,XXIBM_PRODUCT_SKU.description,XXIBM_PRODUCT_PRICING.List_price,XXIBM_PRODUCT_PRICING.In_stock from XXIBM_PRODUCT_SKU JOIN XXIBM_PRODUCT_PRICING ON XXIBM_PRODUCT_SKU.Item_number=XXIBM_PRODUCT_PRICING.Item_number ";
 
-                //MySqlCommand cmd = new MySqlCommand(, conn);
-                mda = new MySqlDataAdapter(str, search.GetConnection());
-                mda.Fill(dt);
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    model.Add(new Product()
-                    {
-                        ItemNumber = Convert.ToInt32(dt.Rows[i]["Item_number"]),
-                        Description = dt.Rows[i]["description"].ToString(),
-                        Price = Convert.ToDouble(dt.Rows[i]["List_price"]),
-                        Stock = dt.Rows[i]["In_stock"].ToString()
+                ////MySqlCommand cmd = new MySqlCommand(, conn);
+                //mda = new MySqlDataAdapter(str, search.GetConnection());
+                //mda.Fill(dt);
+                //for (int i = 0; i < dt.Rows.Count; i++)
+                //{
+                //    model.Add(new Product()
+                //    {
+                //        ItemNumber = Convert.ToInt32(dt.Rows[i]["Item_number"]),
+                //        Description = dt.Rows[i]["description"].ToString(),
+                //        Price = Convert.ToDouble(dt.Rows[i]["List_price"]),
+                //        Stock = dt.Rows[i]["In_stock"].ToString()
 
-                    });
-                }
+                //    });
+                //}
 
             }
             return View(model);
 
             //return View();
         }
-        public IActionResult ProductDetail(int p)
+        public IActionResult ProductDetail()
         {
-            Search search = new Search();
-            var model = new List<Product>();
-            DataTable dt = new DataTable();
-            MySqlDataAdapter mda;
-            using (MySqlConnection conn = search.GetConnection())
-            {
-                conn.Open();
-                string str = "select XXIBM_PRODUCT_SKU.Item_number,XXIBM_PRODUCT_SKU.description,XXIBM_PRODUCT_PRICING.List_price,XXIBM_PRODUCT_PRICING.In_stock from XXIBM_PRODUCT_SKU JOIN XXIBM_PRODUCT_PRICING ON XXIBM_PRODUCT_SKU.Item_number=XXIBM_PRODUCT_PRICING.Item_number where XXIBM_PRODUCT_SKU.Item_number=" + p + " ";
-                mda = new MySqlDataAdapter(str, search.GetConnection());
-                mda.Fill(dt);
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    model.Add(new Product()
-                    {
-                        ItemNumber = Convert.ToInt32(dt.Rows[i]["Item_number"]),
-                        Description = dt.Rows[i]["description"].ToString(),
-                        Price = Convert.ToDouble(dt.Rows[i]["List_price"]),
-                        Brand = dt.Rows[i]["Brand"].ToString()
 
-                    });
-                }
-            }
-            return View(model);
+            var list = _productInformation.GetProductsInformation();
+            ViewBag.name = "All products";
+            return View(list);
         }
         [HttpPost]
         public IActionResult Search(string search)
         {
-            
+
             string s = search.ToUpper();
-            var result = _productDescription.GetProductsDetail();
+            var result = _productInformation.GetProductsInformation();
             result = result.Where(l => string.Compare(l.Brand, s, true) == 0 || l.ClassName.ToUpper().Contains(s) ||
             l.CommodityName.ToUpper().Contains(s) || l.FamilyName.ToUpper().Contains(s) ||
             l.LongDescription.ToUpper().Contains(s) || l.Color.ToUpper().Contains(s) || l.Size.ToUpper().Contains(s)).ToList();
@@ -93,9 +75,26 @@ namespace KoolApplicationMain.Controllers
 
         }
 
-        public IActionResult EachProductDetails( )
+        public IActionResult Brands(string brand)
         {
-            var list = _productDescription.GetProductsDetail();
+
+            var result = _productInformation.GetProductsInformation();
+
+            result = result.Where(l => string.Compare(l.Brand, brand, true) == 0).ToList();
+            if (result.Count == 0)
+            {
+                return View("NoResults");
+            }
+            ViewBag.name = brand;
+            return View("ProductDetail", result);
+
+        }
+
+
+
+        public IActionResult EachProductDetails()
+        {
+            var list = _productInformation.GetProductsInformation();
             ViewBag.name = "All products";
             return View(list);
         }
