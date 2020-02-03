@@ -126,7 +126,7 @@ input:focus {
 
 /* line 64, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_common.scss */
 .padding_top {
-    padding-top: 140px;
+    padding-top: 40px;
 }
 
 @media only screen and (min-width: 992px) and (max-width: 1200px) {
