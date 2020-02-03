@@ -5,6 +5,8 @@ $("#menu-toggle").click(function (e) {
 });
 
 
+
+
 function startDictation() {
 
     if (window.hasOwnProperty('webkitSpeechRecognition')) {
